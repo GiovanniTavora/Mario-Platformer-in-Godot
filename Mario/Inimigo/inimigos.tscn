@@ -1,0 +1,49 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Inimigo/save1.png" type="Texture" id=1]
+[ext_resource path="res://Inimigo/save3.png" type="Texture" id=2]
+[ext_resource path="res://Inimigo/save2.png" type="Texture" id=3]
+[ext_resource path="res://Codigos e Outras Coisas/inimigos.gd" type="Script" id=4]
+[ext_resource path="res://Inimigo/hitKill.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Inimigo/killer.tscn" type="PackedScene" id=6]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "kill",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 8, 5.5 )
+
+[node name="inimigo" type="KinematicBody2D"]
+scale = Vector2( 2, 2 )
+script = ExtResource( 4 )
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 0, -1 )
+frames = SubResource( 1 )
+animation = "walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -1, 2.5 )
+shape = SubResource( 2 )
+
+[node name="hitKill" parent="." instance=ExtResource( 5 )]
+position = Vector2( -1, 4 )
+
+[node name="killer" parent="." instance=ExtResource( 6 )]
+position = Vector2( 0, -2 )
+
+[connection signal="child_entered_tree" from="." to="." method="_on_inimigo_child_entered_tree"]
+[connection signal="body_entered" from="hitKill" to="." method="_on_hitKill_body_entered"]
+[connection signal="body_entered" from="killer" to="." method="_on_killer_body_entered"]
